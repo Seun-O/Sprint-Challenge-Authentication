@@ -1,25 +1,27 @@
 const db = require("../database/dbConfig");
 
-const find = () => {
-  return db("users");
+const getUser = username => {
+  return db("users")
+    .where({ username })
+    .first();
 };
 
 const addUser = user => {
   return db("users").insert(user);
 };
 
-const execute = async () => {
-  try {
-    const data = await find();
-    console.log(data);
-  } catch (err) {
-    console.log(err);
-  }
-};
+// const execute = async () => {
+//   try {
+//     const data = await getUser("mwindu");
+//     console.log(data);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
-execute();
+// execute();
 
 module.exports = {
-  find,
+  getUser,
   addUser
 };

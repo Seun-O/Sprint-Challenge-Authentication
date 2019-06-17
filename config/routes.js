@@ -12,24 +12,50 @@ module.exports = server => {
 
 async function register(req, res) {
   // implement user registration
-  const user = req.body;
-  if (!user.password || !user.username) {
-    res.status(400).json({ message: "Please include a username and password" });
-  }
+  try {
+    const user = req.body;
+    if (!user.password || !user.username) {
+      res
+        .status(400)
+        .json({ message: "Please include a username and password" });
+    }
 
-  if (user.password.length < 8) {
-    res.status(406).json({ message: "Password length too short." });
-  } else {
-    const hash = bcrypt.hashSync(user.password, 14);
-    user.password = hash;
-    user.username = user.username.toLowerCase();
-    const data = await db.addUser(user);
-    res.status(201).json({ data, message: "User successfully created!" });
+    if (user.password.length < 8) {
+      res.status(406).json({ message: "Password length too short." });
+    } else {
+      const hash = bcrypt.hashSync(user.password, 14);
+      user.password = hash;
+      user.username = user.username.toLowerCase();
+      const data = await db.addUser(user);
+      res.status(201).json({ data, message: "User successfully created!" });
+    }
+  } catch (err) {
+    res.status(500).json({ err, message: "Internal server error." });
   }
 }
 
-function login(req, res) {
+async function login(req, res) {
   // implement user login
+  try {
+    const body = req.body;
+    if (!body.username || !body.password) {
+      res.status(400).json({ message: "Username and password required." });
+    } else {
+      const user = await db.getUser(body.username);
+      if (!user) {
+        res
+          .status(401)
+          .json({ message: "Enter a valid username or password." });
+      }
+      if (user && bcrypt.compareSync(body.password, user.password)) {
+        res.status(202).json({ message: "Logged in successfully" });
+      } else {
+        res.status(401).json({ message: "Invalid credentials." });
+      }
+    }
+  } catch (err) {
+    res.status(500).json({ err, message: "Internal server error." });
+  }
 }
 
 function getJokes(req, res) {
