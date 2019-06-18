@@ -1,0 +1,11 @@
+.joke-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.joke-container p {
+  padding: 8px 0;
+  font-size: 20px;
+}

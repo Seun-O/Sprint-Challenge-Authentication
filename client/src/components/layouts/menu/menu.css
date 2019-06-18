@@ -1,0 +1,29 @@
+.main-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 1rem 0;
+}
+
+.title {
+  font-size: 2rem;
+  margin-left: 1rem;
+  color: #fff;
+}
+
+.nav-list {
+  display: flex;
+}
+
+.nav-item a {
+  padding: 1rem;
+  text-decoration: none;
+  color: #fff;
+  outline: none;
+  width: 100%;
+}
+
+.nav-item a:hover {
+  color: lightcoral;
+}
