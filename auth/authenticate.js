@@ -1,20 +1,18 @@
-const jwt = require('jsonwebtoken');
-
-const jwtKey =
-  process.env.JWT_SECRET ||
-  'add a .env file to root of project with the JWT_SECRET variable';
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 // quickly see what this file exports
 module.exports = {
   authenticate,
+  generateToken
 };
 
 // implementation details
 function authenticate(req, res, next) {
-  const token = req.get('Authorization');
+  const token = req.get("Authorization");
 
   if (token) {
-    jwt.verify(token, jwtKey, (err, decoded) => {
+    jwt.verify(token, process.env.PRIVATE, (err, decoded) => {
       if (err) return res.status(401).json(err);
 
       req.decoded = decoded;
@@ -23,7 +21,23 @@ function authenticate(req, res, next) {
     });
   } else {
     return res.status(401).json({
-      error: 'No token provided, must be set on the Authorization Header',
+      error: "No token provided, must be set on the Authorization Header"
     });
   }
+}
+
+const i = "Seun-O @ LambdaSchool"; //Issuer
+const a = "http://localhost:3300/api"; // Audience
+
+function generateToken(user) {
+  const payload = {
+    subject: user.id
+  };
+  const options = {
+    issuer: i,
+    audience: a,
+    expiresIn: "12h"
+  };
+
+  return jwt.sign(payload, process.env.PRIVATE, options);
 }
